@@ -9,3 +9,37 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+
+model Roles {
+  id        Int      @id @default(autoincrement())
+  name      String
+  users     User[]
+}
+
+model Animal {
+  id        Int      @id @default(autoincrement())
+  name      String
+  reports   Report[]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   
+  password  String   
+  roles     Roles    @relation(fields: [roles_id], references: [id])
+  roles_id  Int      @unique
+  reports   Report[]
+}
+
+model Report {
+  id        Int      @id @default(autoincrement())
+  user_id   Int      @unique
+  user      User     @relation(fields: [user_id], references: [id])
+  longitude Float
+  latitude  Float
+  photo_path String  
+  date      DateTime @default(now())
+  animal    Animal   @relation(fields: [animal_id], references: [id])
+  animal_id Int      @unique
+}
